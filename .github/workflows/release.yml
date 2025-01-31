@@ -7,43 +7,34 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - run: npm ci
-      
-      - run: npx nx run-many --target=test --projects=tag:lib
-
-      - run: npx nx run-many --target=build --projects=tag:lib
-
   publish:
-    needs: build
     runs-on: ubuntu-latest
-    environment: production
     permissions:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-tags: 'true'
           
-      - uses: actions/setup-node@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com/
+          cache: 'npm'
           
-      - run: npm ci
+      - name: Install deps
+        run: npm ci
 
       - uses: nrwl/nx-set-shas@v4
 
+      - name: Test affected
+        run: npx nx affected -t test
+
+      - name: Build affected
+        run: npx nx affected -t build
+
       - name: Publish and Release
-        run: npx nx release --projects=tag:lib
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          npx nx release --skip-publish
