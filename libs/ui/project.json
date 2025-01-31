@@ -4,7 +4,7 @@
   "sourceRoot": "libs/ui/src",
   "prefix": "snx",
   "projectType": "library",
-  "tags": [],
+  "tags": ["lib", "ui"],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
