@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-tags: true
+          fetch-tags: 'true'
           
       - uses: actions/setup-node@v4
         with:
@@ -40,6 +40,8 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           
       - run: npm ci
+
+      - uses: nrwl/nx-set-shas@v4
 
       - name: Publish and Release
         run: npx nx release --projects=tag:lib
