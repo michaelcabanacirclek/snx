@@ -22,7 +22,7 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
-    environment: PROD
+    environment: production
     permissions:
       contents: write
       packages: write
@@ -33,6 +33,6 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-      - run: npm publish
+      - run: npx nx release --projects=tag:lib
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
