@@ -11,11 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - run: npm ci
+      
       - run: npx nx run-many --target=test --projects=tag:lib
+
       - run: npx nx run-many --target=build --projects=tag:lib
 
   publish:
@@ -32,6 +36,8 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-      - run: npx nx release --projects=tag:lib
+
+      - name: Publish and Release
+        run: npx nx release --projects=tag:lib
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
