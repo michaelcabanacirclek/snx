@@ -49,6 +49,12 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "nx-release-publish": {
+      "dependsOn": ["build"],
+      "options": {
+        "packageRoot": "dist/libs/{projectName}"
+      }
     }
   },
   "plugins": [
@@ -80,15 +86,17 @@
       "style": "css"
     }
   },
+
   "release": {
+    "projects": ["libs/*"],
     "projectsRelationship": "independent",
+    "version": {
+      "conventionalCommits": true
+    },
     "changelog": {
       "projectChangelogs": {
         "createRelease": "github"
       }
-    },
-    "version": {
-      "conventionalCommits": true
     }
   }
 }
