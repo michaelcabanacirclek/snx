@@ -8,6 +8,6 @@ import { Component } from '@angular/core';
 })
 export class HelloWorldComponent {
   sayHello() {
-    alert('Hi world!');
+    alert('Hi World!');
   }
 }
