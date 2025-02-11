@@ -98,6 +98,7 @@
     },
     "changelog": {
       "projectChangelogs": {
+        "file": false,
         "createRelease": "github"
       }
     }
