@@ -91,7 +91,10 @@
     "projects": ["libs/*"],
     "projectsRelationship": "independent",
     "version": {
-      "conventionalCommits": true
+      "conventionalCommits": true,
+      "generatorOptions": {
+        "fallbackCurrentVersionResolver": "disk"
+      }
     },
     "changelog": {
       "projectChangelogs": {
