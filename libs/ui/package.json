@@ -1,5 +1,9 @@
 {
   "name": "@snx/ui",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michaelcabanacirclek/snx.git"
+  },
   "version": "0.3.1",
   "peerDependencies": {
     "@angular/core": "^19.1.0"
