@@ -13,6 +13,6 @@ export class HelloWorldComponent {
   }
 
   sayGoodbye() {
-    alert('Bye bye now!');
+    alert('Bye bye again!');
   }
 }
