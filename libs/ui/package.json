@@ -1,8 +1,8 @@
 {
-  "name": "@snx/ui",
+  "name": "@michaelcabanacirclek/snx-ui",
   "repository": {
     "type": "git",
-    "url": "https://github.com/michaelcabanacirclek/snx.git"
+    "url": "git+https://github.com/michaelcabanacirclek/snx.git"
   },
   "version": "0.4.0",
   "peerDependencies": {
