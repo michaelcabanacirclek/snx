@@ -1,8 +1,9 @@
 name: Publish
 
 on:
-  release:
-    types: [released]
+  push:
+    tags:
+      - v*.*.*
   workflow_dispatch:
 
 jobs:
@@ -14,28 +15,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Get Version
-        run: |
-          TAG_NAME=${{github.event.release.tag_name}}
-          echo "PACKAGE_NAME=$(echo $TAG_NAME | cut -d "@" -f 1)" >> $GITHUB_ENV
-          echo "APP_VERSION=$(echo $TAG_NAME | cut -d "@" -f 2)" >> $GITHUB_ENV
+        with:
+          fetch-depth: 0
+          fetch-tags: 'true'
 
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+          registry-url: https://npm.pkg.github.com
 
       - name: Install deps
         run: npm ci
+
+      - name: Print environment info
+        run: npx nx report
 
       - name: Publish packages
         run: |
           npx nx release publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
