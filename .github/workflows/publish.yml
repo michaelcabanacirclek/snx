@@ -33,10 +33,9 @@ jobs:
       - name: Install deps
         run: npm ci
 
-        # Remove --dry-run once you will be ready to publish to npm registry
       - name: Publish packages
         run: |
-          npx nx release publish --dry-run
+          npx nx release publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
