@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - developement
+      - development
   workflow_dispatch:
 
 jobs:
@@ -57,7 +57,7 @@ jobs:
 
 
       - name: Create Prerelease
-        if: github.ref == 'refs/heads/developement'
+        if: github.ref == 'refs/heads/development'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
