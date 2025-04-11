@@ -1,12 +1,10 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
 name: Release
 
 on:
   push:
-    branches: 
-      - 'main'
+    branches:
+      - main
+      - developement
   workflow_dispatch:
 
 jobs:
@@ -27,26 +25,49 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          
+
       - name: Setup node
         uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
           cache: 'npm'
-          
+
       - name: Install deps
         run: npm ci
 
-      - uses: nrwl/nx-set-shas@v4
+      - name: Test libs
+        run: npx nx run-many -t test --projects=tag:lib --no-cloud  --verbose
 
-      - name: Test affected
-        run: npx nx affected -t test
+      - name: Build libs
+        run: npx nx run-many -t build --projects=tag:lib --no-cloud --verbose
 
-      - name: Build affected
-        run: npx nx affected -t build
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+      
+      - name: Confirm git commit SHA output
+        run: echo ${{ env.COMMIT_SHORT_SHA }}
 
-      - name: Publish and Release
+        # Version is calculated from git history based on conentional commits https://www.conventionalcommits.org/en/v1.0.0/#summary 
+
+
+      - name: Create Prerelease
+        if: github.ref == 'refs/head/developement'
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx nx release --skip-publish --specifier prerelease --preid beta-${{ env.COMMIT_SHORT_SHA }}
+
+        # OR if on main branch
+
+      - name: Create Release
+        if: github.ref == 'refs/head/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx nx release --skip-publish
