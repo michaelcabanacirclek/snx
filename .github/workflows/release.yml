@@ -21,6 +21,11 @@ jobs:
           fetch-depth: 0
           fetch-tags: 'true'
 
+      - name: Ensure local main branch exists
+        run: |
+          git fetch origin main
+          git branch main origin/main
+
       - name: Set git credentials
         run: |
           git config user.name 'github-actions[bot]'
@@ -56,10 +61,6 @@ jobs:
 
         # Version is calculated from git history based on conentional commits https://www.conventionalcommits.org/en/v1.0.0/#summary 
 
-
-      - name: Fetch main remote branch
-        if: github.ref == 'refs/heads/development'
-        run: git fetch origin main:refs/remotes/origin/main
 
       - name: Create Prerelease
         if: github.ref == 'refs/heads/development'
