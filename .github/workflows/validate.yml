@@ -1,0 +1,36 @@
+name: Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  build:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: [ubuntu-latest]
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # - name: Test Projects
+      #   run: npx nx run-many -t test --parallel=5
+
+      # - name: Lint Project
+      #   run: npx nx run-many -t lint --parallel=5
+
+      - name: Build Projects
+        run: npx nx run-many -t build --parallel=5
