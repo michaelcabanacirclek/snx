@@ -66,7 +66,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npx nx release --skip-publish --specifier prerelease --preid beta-${{ env.COMMIT_SHORT_SHA }}
+          npx nx release version prerelease --preid beta-${{ env.COMMIT_SHORT_SHA }} --git-commit --git-tag --git-push
+
+        # npx nx release --skip-publish --specifier prerelease --preid beta-${{ env.COMMIT_SHORT_SHA }}
 
         # OR if on main branch
 
