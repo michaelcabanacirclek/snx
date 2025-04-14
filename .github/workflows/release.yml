@@ -53,8 +53,13 @@ jobs:
       - name: Confirm git commit SHA output
         run: echo ${{ env.COMMIT_SHORT_SHA }}
 
+
         # Version is calculated from git history based on conentional commits https://www.conventionalcommits.org/en/v1.0.0/#summary 
 
+
+      - name: Fetch main remote branch
+        if: github.ref == 'refs/heads/development'
+        run: git fetch origin main:refs/remotes/origin/main
 
       - name: Create Prerelease
         if: github.ref == 'refs/heads/development'
