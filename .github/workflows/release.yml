@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - developement
+      - development
   workflow_dispatch:
 
 jobs:
@@ -20,6 +20,11 @@ jobs:
         with:
           fetch-depth: 0
           fetch-tags: 'true'
+
+      - name: Ensure local main branch exists
+        run: |
+          git fetch origin main
+          git branch main origin/main
 
       - name: Set git credentials
         run: |
@@ -53,20 +58,21 @@ jobs:
       - name: Confirm git commit SHA output
         run: echo ${{ env.COMMIT_SHORT_SHA }}
 
+
         # Version is calculated from git history based on conentional commits https://www.conventionalcommits.org/en/v1.0.0/#summary 
 
 
       - name: Create Prerelease
-        if: github.ref == 'refs/head/developement'
+        if: github.ref == 'refs/heads/development'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npx nx release --skip-publish --specifier prerelease --preid beta-${{ env.COMMIT_SHORT_SHA }}
+          npx nx release prerelease --preid beta-${{ env.COMMIT_SHORT_SHA }} --skip-publish
 
         # OR if on main branch
 
       - name: Create Release
-        if: github.ref == 'refs/head/main'
+        if: github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
