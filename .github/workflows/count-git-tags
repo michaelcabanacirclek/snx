@@ -1,0 +1,31 @@
+name: Count Git Tags
+
+on:
+  workflow_dispatch:
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: 'true'
+          
+      - name: Count git tags
+        run: |
+          gitCount=$(git tag | wc -l)
+          echo "GIT_TAG_COUNT=$gitCount" >> $GITHUB_ENV
+
+      - name: Output tag count
+        run: |
+          echo ${{ env.GIT_TAG_COUNT }}
+
+      - name: Has tags
+        if: env.GIT_TAG_COUNT != "0"
+        run: echo "Has tags"
+
+      - name: Has no tags
+        if: env.GIT_TAG_COUNT == "0"
+        run: echo "Has no tags"
+
