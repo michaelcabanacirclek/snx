@@ -21,11 +21,6 @@ jobs:
           fetch-depth: 0
           fetch-tags: 'true'
 
-      - name: Ensure local main branch exists
-        run: |
-          git fetch origin main
-          git branch main origin/main
-
       - name: Set git credentials
         run: |
           git config user.name 'github-actions[bot]'
@@ -54,13 +49,17 @@ jobs:
         run: |
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-      
+
       - name: Confirm git commit SHA output
         run: echo ${{ env.COMMIT_SHORT_SHA }}
 
+        # Version is calculated from git history based on conentional commits https://www.conventionalcommits.org/en/v1.0.0/#summary
 
-        # Version is calculated from git history based on conentional commits https://www.conventionalcommits.org/en/v1.0.0/#summary 
-
+      - name: Ensure local main branch exists
+        if: github.ref == 'refs/heads/development'
+        run: |
+          git fetch origin main
+          git branch main origin/main
 
       - name: Create Prerelease
         if: github.ref == 'refs/heads/development'
