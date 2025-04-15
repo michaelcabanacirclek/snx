@@ -22,10 +22,10 @@ jobs:
           echo ${{ env.GIT_TAG_COUNT }}
 
       - name: Has tags
-        if: env.GIT_TAG_COUNT != "0"
+        if: env.GIT_TAG_COUNT != 0
         run: echo "Has tags"
 
       - name: Has no tags
-        if: env.GIT_TAG_COUNT == "0"
+        if: env.GIT_TAG_COUNT == 0
         run: echo "Has no tags"
 
